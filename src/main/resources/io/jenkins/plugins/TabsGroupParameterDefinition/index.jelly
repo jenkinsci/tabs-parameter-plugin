@@ -16,13 +16,13 @@
                         <j:set var="id" value="selected"/>
                     </j:if>
                     <input type="button" id="${id}" value="${tab.name}" class="tablinks"
-                           onclick="openTab(event, '${tab.name}')"/>
+                           onclick="openTab(event, '${h.escape(tab.name)}')"/>
                 </j:forEach>
             </div>
 
             <j:forEach var="tab" items="${it.tabs}">
                 <!-- Tab content -->
-                <div name="tabsValues" id="${tab.name}" class="tabcontent">
+                <div name="tabsValues" id="${h.escape(tab.name)}" class="tabcontent">
                     <input type="hidden" name="name" value="${tab.name}"/>
                     <j:forEach var="parameterDefinition" items="${tab.parameters}">
                         <j:set var="escapeEntryTitleAndDescription" value="true"/> <!-- SECURITY-353 defense unless overridden -->

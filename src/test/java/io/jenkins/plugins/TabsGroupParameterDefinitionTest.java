@@ -42,19 +42,19 @@ class TabsGroupParameterDefinitionTest {
 
         var tab1Params = new ArrayList<ParameterValue>();
         tab1Params.add(new StringParameterValue("toto", "tata"));
-        tabs.add(new TabParametersValue("tab1", tab1Params));
+        tabs.add(new TabParametersValue("tab'1", tab1Params));
 
         var tab2Params = new ArrayList<ParameterValue>();
         tab2Params.add(new BooleanParameterValue("my-bool", true, "some boolean"));
         tabs.add(new TabParametersValue("tab2", tab2Params));
 
-        var tabsGroupValue = new TabsGroupParameterValue("tabsParam", tabs, "tab1");
+        var tabsGroupValue = new TabsGroupParameterValue("tabsParam", tabs, "tab'1");
 
         WorkflowJob job = jenkins.createProject(WorkflowJob.class, "test-scripted-pipeline");
         job.addProperty(new ParametersDefinitionProperty(generateTabConfig()));
         String pipelineScript =
                 """
-                echo "Param toto equals : ${params.tabsParam.tab1.toto}"
+                echo "Param toto equals : ${params.tabsParam["tab'1"].toto}"
                 echo "Selected tab : ${params.tabsParam.selectedTab}"
                 """;
 
@@ -62,7 +62,7 @@ class TabsGroupParameterDefinitionTest {
         WorkflowRun completedBuild =
                 jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0, new ParametersAction(tabsGroupValue)));
         jenkins.assertLogContains("Param toto equals : tata", completedBuild);
-        jenkins.assertLogContains("Selected tab : tab1", completedBuild);
+        jenkins.assertLogContains("Selected tab : tab'1", completedBuild);
     }
 
     private TabsGroupParameterDefinition generateTabConfig() {
