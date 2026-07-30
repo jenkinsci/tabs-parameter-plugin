@@ -1,12 +1,11 @@
 package io.jenkins.plugins;
 
 import hudson.model.ParameterValue;
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 public class TabsGroupParameterValue extends ParameterValue {
 

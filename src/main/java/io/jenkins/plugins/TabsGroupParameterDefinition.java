@@ -6,17 +6,16 @@ import hudson.model.ParameterDefinition;
 import hudson.model.ParameterValue;
 import hudson.model.SimpleParameterDefinition;
 import hudson.util.FormValidation;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest2;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * Entrypoint of tab parameters
@@ -77,12 +76,13 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
                 }
             }
         }
-        throw new IllegalArgumentException("Cannot find parameter definition " + name + " in " + this.getName() + " tab definition");
+        throw new IllegalArgumentException(
+                "Cannot find parameter definition " + name + " in " + this.getName() + " tab definition");
     }
 
     @Override
     public TabsGroupParameterValue createValue(String value) {
-        //TODO for requests from CLI to work
+        // TODO for requests from CLI to work
         return null;
     }
 
@@ -106,9 +106,7 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
 
     @Override
     public String toString() {
-        return "TabsGroupParameterDefinition{" +
-            "tabs=" + tabs +
-            '}';
+        return "TabsGroupParameterDefinition{" + "tabs=" + tabs + '}';
     }
 
     @Extension

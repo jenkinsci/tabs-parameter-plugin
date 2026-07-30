@@ -6,12 +6,11 @@ import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.ParameterDefinition;
 import hudson.util.FormValidation;
+import java.io.Serializable;
+import java.util.List;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
-
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * Describe a tab and parameters contained inside
@@ -65,9 +64,9 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
             if (name.isEmpty())
                 return FormValidation.error(Messages.TabParametersDefinition_DescriptorImpl_NameEmpty());
             if (TabsGroupParameterValue.SELECTED_TAB_KEY.equals(name))
-                return FormValidation.error(Messages.TabParametersDefinition_DescriptorImpl_NameReserved(TabsGroupParameterValue.SELECTED_TAB_KEY));
+                return FormValidation.error(Messages.TabParametersDefinition_DescriptorImpl_NameReserved(
+                        TabsGroupParameterValue.SELECTED_TAB_KEY));
             return FormValidation.ok();
         }
     }
-
 }

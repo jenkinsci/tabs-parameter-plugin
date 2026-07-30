@@ -1,10 +1,9 @@
 package io.jenkins.plugins;
 
 import hudson.model.ParameterValue;
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import java.io.Serializable;
 import java.util.List;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 public class TabParametersValue implements Serializable {
     private final String name;
@@ -26,9 +25,6 @@ public class TabParametersValue implements Serializable {
 
     @Override
     public String toString() {
-        return "TabParametersValue{" +
-                "name='" + name + '\'' +
-                ", parameters=" + parameters +
-                '}';
+        return "TabParametersValue{" + "name='" + name + '\'' + ", parameters=" + parameters + '}';
     }
 }

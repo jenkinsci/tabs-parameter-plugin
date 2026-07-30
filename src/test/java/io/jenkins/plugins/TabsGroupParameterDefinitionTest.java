@@ -1,17 +1,16 @@
 package io.jenkins.plugins;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import hudson.model.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WithJenkins
 class TabsGroupParameterDefinitionTest {
@@ -20,13 +19,14 @@ class TabsGroupParameterDefinitionTest {
     void configRoundtrip(JenkinsRule jenkins) throws Exception {
         FreeStyleProject p = jenkins.createFreeStyleProject();
 
-
         p.addProperty(new ParametersDefinitionProperty(generateTabConfig()));
         jenkins.configRoundtrip(p);
-        TabsGroupParameterDefinition tabsParamDefinition = (TabsGroupParameterDefinition) p.getProperty(ParametersDefinitionProperty.class).getParameterDefinition("tabsParam");
+        TabsGroupParameterDefinition tabsParamDefinition = (TabsGroupParameterDefinition)
+                p.getProperty(ParametersDefinitionProperty.class).getParameterDefinition("tabsParam");
         assertEquals(2, tabsParamDefinition.getTabs().size());
 
-        Iterator<TabParametersDefinition> iterator = tabsParamDefinition.getTabs().iterator();
+        Iterator<TabParametersDefinition> iterator =
+                tabsParamDefinition.getTabs().iterator();
         TabParametersDefinition next = iterator.next();
         assertEquals("tab1", next.getName());
         assertEquals("toto", next.getParameters().stream().findFirst().get().getName());
@@ -50,16 +50,17 @@ class TabsGroupParameterDefinitionTest {
 
         var tabsGroupValue = new TabsGroupParameterValue("tabsParam", tabs, "tab1");
 
-
         WorkflowJob job = jenkins.createProject(WorkflowJob.class, "test-scripted-pipeline");
         job.addProperty(new ParametersDefinitionProperty(generateTabConfig()));
-        String pipelineScript = """
+        String pipelineScript =
+                """
                 echo "Param toto equals : ${params.tabsParam.tab1.toto}"
                 echo "Selected tab : ${params.tabsParam.selectedTab}"
                 """;
 
         job.setDefinition(new CpsFlowDefinition(pipelineScript, true));
-        WorkflowRun completedBuild = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0, new ParametersAction(tabsGroupValue)));
+        WorkflowRun completedBuild =
+                jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0, new ParametersAction(tabsGroupValue)));
         jenkins.assertLogContains("Param toto equals : tata", completedBuild);
         jenkins.assertLogContains("Selected tab : tab1", completedBuild);
     }
@@ -77,5 +78,4 @@ class TabsGroupParameterDefinitionTest {
 
         return new TabsGroupParameterDefinition("tabsParam", tabs);
     }
-
 }
