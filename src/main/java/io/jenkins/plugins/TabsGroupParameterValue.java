@@ -10,6 +10,12 @@ import java.util.Objects;
 
 public class TabsGroupParameterValue extends ParameterValue {
 
+    /**
+     * Reserved key used to expose the selected tab name in the map returned by {@link #getValue()}.
+     * Tab names and parameter names must not collide with this key.
+     */
+    public static final String SELECTED_TAB_KEY = "selectedTab";
+
     private final List<TabParametersValue> tabsValues;
 
     private final String selectedTab;
@@ -26,8 +32,8 @@ public class TabsGroupParameterValue extends ParameterValue {
      * e.g. params.groupTab.tab1.myarg
      */
     @Override
-    public Map<String, Map<String, Object>> getValue() {
-        var result = new LinkedHashMap<String, Map<String, Object>>();
+    public Map<String, Object> getValue() {
+        var result = new LinkedHashMap<String, Object>();
         for (TabParametersValue tab : tabsValues) {
             var paramMap = new LinkedHashMap<String, Object>();
             for (ParameterValue param : tab.getParameters()) {
@@ -35,6 +41,7 @@ public class TabsGroupParameterValue extends ParameterValue {
             }
             result.put(tab.getName(), paramMap);
         }
+        result.put(SELECTED_TAB_KEY, selectedTab);
         return result;
     }
 

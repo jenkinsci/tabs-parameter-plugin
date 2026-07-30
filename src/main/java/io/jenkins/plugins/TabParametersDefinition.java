@@ -60,6 +60,14 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
                 return FormValidation.error(Messages.TabParametersDefinition_DescriptorImpl_ParametersEmpty());
             else return FormValidation.ok();
         }
+
+        public FormValidation doCheckName(@QueryParameter String name) {
+            if (name.isEmpty())
+                return FormValidation.error(Messages.TabParametersDefinition_DescriptorImpl_NameEmpty());
+            if (TabsGroupParameterValue.SELECTED_TAB_KEY.equals(name))
+                return FormValidation.error(Messages.TabParametersDefinition_DescriptorImpl_NameReserved(TabsGroupParameterValue.SELECTED_TAB_KEY));
+            return FormValidation.ok();
+        }
     }
 
 }

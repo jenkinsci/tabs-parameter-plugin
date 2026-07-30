@@ -82,7 +82,7 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
 
     @Override
     public TabsGroupParameterValue createValue(String value) {
-        //TODO
+        //TODO for requests from CLI to work
         return null;
     }
 
@@ -102,6 +102,13 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), tabs);
+    }
+
+    @Override
+    public String toString() {
+        return "TabsGroupParameterDefinition{" +
+            "tabs=" + tabs +
+            '}';
     }
 
     @Extension

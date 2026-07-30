@@ -53,12 +53,15 @@ class TabsGroupParameterDefinitionTest {
 
         WorkflowJob job = jenkins.createProject(WorkflowJob.class, "test-scripted-pipeline");
         job.addProperty(new ParametersDefinitionProperty(generateTabConfig()));
-        String pipelineScript = "echo \"Param toto equals : ${params.tabsParam.tab1.toto}\"";
+        String pipelineScript = """
+                echo "Param toto equals : ${params.tabsParam.tab1.toto}"
+                echo "Selected tab : ${params.tabsParam.selectedTab}"
+                """;
 
         job.setDefinition(new CpsFlowDefinition(pipelineScript, true));
         WorkflowRun completedBuild = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0, new ParametersAction(tabsGroupValue)));
-        String expectedString = "Param toto equals : tata";
-        jenkins.assertLogContains(expectedString, completedBuild);
+        jenkins.assertLogContains("Param toto equals : tata", completedBuild);
+        jenkins.assertLogContains("Selected tab : tab1", completedBuild);
     }
 
     private TabsGroupParameterDefinition generateTabConfig() {

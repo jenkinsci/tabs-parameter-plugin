@@ -24,6 +24,21 @@ Install the plugin on your Jenkins instance.
 Add a "Tabs parameter" as you would add any other [build parameter](https://plugins.jenkins.io/build-with-parameters/)
 
 Then you can access your parameters as usual as `params.tabGroupName.tabName.paramName` in your pipeline or freestyle job.
+You can also access the selected tab as `params.tabGroupName.selectedTab`.
+
+The layout of the parameter is defined like : 
+
+```
+params
+└── tabGroupName
+    ├── selectedTab <= This is the name of the selected tab
+    ├── tabName1
+    │   ├── paramName1
+    │   └── paramName2
+    └── tabName2
+        ├── paramName3
+        └── paramName4
+```
 
 ## Limitations:
 
