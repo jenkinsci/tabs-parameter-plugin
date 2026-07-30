@@ -23,7 +23,7 @@ import java.util.Objects;
  * Define a list of tabs {@link TabParametersDefinition} the contains other parameters
  * Parameters can be any Jenkins {@link ParameterDefinition}
  * <p>
- * The method {@link TabsGroupParameterDefinition#createValue(String)} make the work of generating values of parameters inside the tabs
+ * The method {@link TabsGroupParameterDefinition#createValue(StaplerRequest2, JSONObject)} make the work of generating values of parameters inside the tabs
  */
 public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
 

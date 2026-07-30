@@ -18,28 +18,20 @@ Second tab:
 
 Heavily inspired by uno choice plugin.
 
-## Plugin maintenance
-
-This plugin will maybe never receive any new updates and is provided as is.
-Right now I don't have the time to fully support this plugin on my own time.
-
-Feel free to fork this plugin and add your features on your fork. If you feel like you could handle the maintenance of
-this plugin, you can even try to make it an official plugin. Just credit this repo if you do this.
-Maybe this plugin is ready to be included in official plugins. At least I followed the "Publish your plugin guide".
-
 ## Getting started
 
-Just add a "Tabs parameter" as you would add any
-other [build parameter](https://plugins.jenkins.io/build-with-parameters/)
+Install the plugin on your Jenkins instance. 
+Add a "Tabs parameter" as you would add any other [build parameter](https://plugins.jenkins.io/build-with-parameters/)
+
+Then you can access your parameters as usual as `params.tabGroupName.tabName.paramName` in your pipeline or freestyle job.
 
 ## Limitations:
 
 * Did not test recursion of tabs
-* Not tested rebuild plugin
+* Not tested compatibility with rebuild plugin
 * Only tested with base Jenkins Parameters
-* Cannot do POST requests
-* All parameters are passed to the build, even the not visible ones
-* No unit tests (shame on me)
+* Cannot do POST requests (TabsGroupParameterDefinition#createValue(String) is not implemented)
+* All parameters are passed to the build, even the ones not visible
 
 ## Technical Infos
 

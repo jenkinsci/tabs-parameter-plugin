@@ -3,7 +3,9 @@ package io.jenkins.plugins;
 import hudson.model.ParameterValue;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class TabsGroupParameterValue extends ParameterValue {
@@ -19,9 +21,21 @@ public class TabsGroupParameterValue extends ParameterValue {
         this.selectedTab = selectedTab;
     }
 
+    /**
+     * Returns a nested map for Groovy map-style access in Jenkinsfile.
+     * e.g. params.groupTab.tab1.myarg
+     */
     @Override
-    public List<TabParametersValue> getValue() {
-        return getTabsValues();
+    public Map<String, Map<String, Object>> getValue() {
+        var result = new LinkedHashMap<String, Map<String, Object>>();
+        for (TabParametersValue tab : tabsValues) {
+            var paramMap = new LinkedHashMap<String, Object>();
+            for (ParameterValue param : tab.getParameters()) {
+                paramMap.put(param.getName(), param.getValue());
+            }
+            result.put(tab.getName(), paramMap);
+        }
+        return result;
     }
 
     public List<TabParametersValue> getTabsValues() {
