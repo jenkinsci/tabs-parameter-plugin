@@ -52,7 +52,7 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
         @NonNull
         @Override
         public String getDisplayName() {
-            return "Tab parameters";
+            return Messages.TabParametersDefinition_DescriptorImpl_DisplayName();
         }
 
         public FormValidation doCheckParameters(@QueryParameter String parameters) {
