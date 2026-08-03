@@ -15,8 +15,8 @@
                     <j:if test="${index==0}">
                         <j:set var="id" value="selected"/>
                     </j:if>
-                    <input type="button" id="${id}" value="${tab.name}" class="tablinks"
-                           onclick="openTab(event, '${h.escape(tab.name)}')"/>
+                    <button type="button" id="${id}" class="tablinks" name="${h.escape(tab.name)}"
+                           onclick="openTab(event, '${h.escape(tab.name)}')">${tab.name}</button>
                 </j:forEach>
             </div>
 

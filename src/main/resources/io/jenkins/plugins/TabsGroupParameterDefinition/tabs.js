@@ -32,7 +32,7 @@ function docReady(fn) {
 
 docReady(function() {
     var input = document.getElementById("selected");
-    var tabKey = input.value;
+    var tabKey = input.name;
     if(tabKey != null){
       openTab({"currentTarget": input}, tabKey);
     }
