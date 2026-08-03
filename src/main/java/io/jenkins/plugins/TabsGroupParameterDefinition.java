@@ -38,6 +38,7 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
     public TabsGroupParameterValue createValue(StaplerRequest2 req, JSONObject jo) {
         String name = jo.getString("name");
         String selectedTabValue = jo.getString("selectedTab");
+        //TODO handle selectedValue empty
         var groupParameterValue = new TabsGroupParameterValue(name, new ArrayList<>(), selectedTabValue);
 
         Iterable<Object> tabsValues = toIterable(jo.get("tabsValues"));
@@ -47,13 +48,15 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
             var tabName = tabJSONObject.getString("name");
 
             var parametersValues = new ArrayList<ParameterValue>();
-            Iterable<Object> parameters = toIterable(tabJSONObject.get("parameter"));
-            parameters.forEach(parameter -> {
-                JSONObject jsonParameter = JSONObject.fromObject(parameter);
-                var parameterName = jsonParameter.getString("name");
-                var paramDefinition = getParamDefinitionFromTab(parameterName);
-                parametersValues.add(paramDefinition.createValue(req, jsonParameter));
-            });
+            if(tabJSONObject.containsKey("parameter")) {
+                Iterable<Object> parameters = toIterable(tabJSONObject.get("parameter"));
+                parameters.forEach(parameter -> {
+                    JSONObject jsonParameter = JSONObject.fromObject(parameter);
+                    var parameterName = jsonParameter.getString("name");
+                    var paramDefinition = getParamDefinitionFromTab(parameterName);
+                    parametersValues.add(paramDefinition.createValue(req, jsonParameter));
+                });
+            }
             groupParameterValue.getTabsValues().add(new TabParametersValue(tabName, parametersValues));
         });
 
