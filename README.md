@@ -1,4 +1,4 @@
-# tabs-parameter
+# tabs-parameter-plugin
 
 ## Introduction
 
