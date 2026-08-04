@@ -65,11 +65,11 @@ public class TabsGroupParameterValue extends ParameterValue {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         TabsGroupParameterValue that = (TabsGroupParameterValue) o;
-        return Objects.equals(tabsValues, that.tabsValues);
+        return Objects.equals(tabsValues, that.tabsValues) && Objects.equals(selectedTab, that.selectedTab);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), tabsValues);
+        return Objects.hash(super.hashCode(), tabsValues, selectedTab);
     }
 }
