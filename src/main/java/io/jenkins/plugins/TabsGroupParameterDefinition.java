@@ -31,17 +31,21 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
     @DataBoundConstructor
     public TabsGroupParameterDefinition(String name, List<TabParametersDefinition> tabs) {
         super(name);
-        this.tabs = tabs;
+        this.tabs = Objects.requireNonNull(tabs, "tabs must not be null");
     }
 
     @Override
     public TabsGroupParameterValue createValue(StaplerRequest2 req, JSONObject jo) {
-        String name = jo.getString("name");
-        String selectedTabValue = jo.getString("selectedTab");
+        Objects.requireNonNull(req, "request must not be null");
+        Objects.requireNonNull(jo, "request payload must not be null");
+
+        String name = Objects.requireNonNull(jo.getString("name"), "parameter group name must not be null");
+        String selectedTabValue = Objects.requireNonNull(jo.getString("selectedTab"), "selectedTab must not be null");
         // TODO handle selectedValue empty
         var groupParameterValue = new TabsGroupParameterValue(name, new ArrayList<>(), selectedTabValue);
 
-        Iterable<Object> tabsValues = toIterable(jo.get("tabsValues"));
+        Object rawTabsValues = Objects.requireNonNull(jo.get("tabsValues"),"tabsValues must not be null");
+        Iterable<Object> tabsValues = toIterable(rawTabsValues);
 
         tabsValues.forEach(tab -> {
             var tabJSONObject = JSONObject.fromObject(tab);

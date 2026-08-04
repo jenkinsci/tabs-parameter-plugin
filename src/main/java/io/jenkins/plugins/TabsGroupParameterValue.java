@@ -22,7 +22,7 @@ public class TabsGroupParameterValue extends ParameterValue {
     @DataBoundConstructor
     public TabsGroupParameterValue(String name, List<TabParametersValue> tabsValues, String selectedTab) {
         super(name);
-        this.tabsValues = tabsValues;
+        this.tabsValues = Objects.requireNonNull(tabsValues, "tabsValues must not be null");
         this.selectedTab = selectedTab;
     }
 
