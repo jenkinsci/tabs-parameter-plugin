@@ -44,7 +44,7 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
         // TODO handle selectedValue empty
         var groupParameterValue = new TabsGroupParameterValue(name, new ArrayList<>(), selectedTabValue);
 
-        Object rawTabsValues = Objects.requireNonNull(jo.get("tabsValues"),"tabsValues must not be null");
+        Object rawTabsValues = Objects.requireNonNull(jo.get("tabsValues"), "tabsValues must not be null");
         Iterable<Object> tabsValues = toIterable(rawTabsValues);
 
         tabsValues.forEach(tab -> {
@@ -89,8 +89,8 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
 
     @Override
     public TabsGroupParameterValue createValue(String value) {
-        throw new UnsupportedOperationException(
-                "String-based parameter parsing is not supported for '" + getName() + "'. Use form submission instead.");
+        throw new UnsupportedOperationException("String-based parameter parsing is not supported for '" + getName()
+                + "'. Use form submission instead.");
     }
 
     public List<TabParametersDefinition> getTabs() {

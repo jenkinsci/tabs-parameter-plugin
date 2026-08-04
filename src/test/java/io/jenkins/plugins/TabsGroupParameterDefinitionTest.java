@@ -68,8 +68,8 @@ class TabsGroupParameterDefinitionTest {
 
     @Test
     void createValueFromStringIsRejected() {
-        UnsupportedOperationException exception =
-                assertThrows(UnsupportedOperationException.class, () -> generateTabConfig().createValue("raw"));
+        UnsupportedOperationException exception = assertThrows(
+                UnsupportedOperationException.class, () -> generateTabConfig().createValue("raw"));
         assertEquals(
                 "String-based parameter parsing is not supported for 'tabsParam'. Use form submission instead.",
                 exception.getMessage());

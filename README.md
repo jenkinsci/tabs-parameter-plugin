@@ -1,4 +1,4 @@
-# tab-parameters
+# tabs-parameter
 
 ## Introduction
 

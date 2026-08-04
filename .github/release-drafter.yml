@@ -1,2 +1,2 @@
 _extends: .github
-tag-template: tab-parameters-$NEXT_MINOR_VERSION
+tag-template: tabs-parameter-$NEXT_MINOR_VERSION
