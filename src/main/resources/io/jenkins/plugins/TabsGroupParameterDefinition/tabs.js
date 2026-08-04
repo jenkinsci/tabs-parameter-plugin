@@ -1,4 +1,4 @@
-function openTab(evt) {
+function openTab(tabButton) {
     // Declare all variables
     let i, tabcontent, tablinks;
 
@@ -15,9 +15,9 @@ function openTab(evt) {
     }
 
     // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(evt.currentTarget.name).style.display = "block";
-    document.getElementById("selected-tab-input").value = evt.currentTarget.innerText;
-    evt.currentTarget.className += " active";
+    document.getElementById(tabButton.dataset.tabName).style.display = "block";
+    document.getElementById("selected-tab-input").value = tabButton.innerText;
+    tabButton.className += " active";
 }
 
 function docReady(fn) {
@@ -31,8 +31,15 @@ function docReady(fn) {
 }
 
 docReady(function () {
+    const tabButtons = document.getElementsByClassName("tablinks");
+    for (let i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].addEventListener("click", function (event) {
+            openTab(event.currentTarget);
+        });
+    }
+
     const input = document.getElementsByClassName("active");
     if (input[0] != null) {
-        openTab({"currentTarget": input[0]});
+        openTab(input[0]);
     }
 });

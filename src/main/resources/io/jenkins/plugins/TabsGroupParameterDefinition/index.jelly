@@ -16,7 +16,7 @@
                         <j:set var="active" value="active"/>
                     </j:if>
                     <button type="button" class="tablinks ${active}" name="${h.escape(tab.name)}"
-                           onclick="openTab(event, '${h.escape(tab.name)}')">${tab.name}</button>
+                            data-tab-name="${h.escape(tab.name)}">${tab.name}</button>
                 </j:forEach>
             </div>
 
