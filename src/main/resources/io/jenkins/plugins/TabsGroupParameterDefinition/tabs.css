@@ -1,45 +1,17 @@
- /* Style the tab */
 .tab {
   display: flex;
   overflow: hidden;
 }
 
-/* Style the buttons that are used to open the tab content */
 .tab button {
-  background-color: inherit;
-  float: left;
-  border: none !important;
-  outline: none;
-  cursor: pointer;
-  font-size: .875rem;
-  padding: .55rem .7rem;
-  margin-left: 0px;
-  margin-right: 0px;
-  transition: 0.3s;
-  font-weight: 500;
-  color: var(--text-color);
-  overflow: auto;
-  align-items: center;
-  border-radius: .66rem;
   width:100%;
+  /* used to overflow long tab name */
+  overflow: auto;
   word-wrap: break-word;
+  white-space: normal;
+  display: block;
 }
 
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: var(--item-background--hover);
-}
-
-.tab button:focus {
-  box-shadow: none;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: var(--item-background--active);
-}
-
-/* Style the tab content */
 .tabcontent {
   display: none;
   padding: 20px 12px 0px 12px;

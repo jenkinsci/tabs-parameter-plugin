@@ -15,7 +15,7 @@
                     <j:if test="${index==0}">
                         <j:set var="active" value="active"/>
                     </j:if>
-                    <button type="button" class="tablinks ${active}" name="${h.escape(tab.name)}"
+                    <button type="button" class="jenkins-button tablinks ${active}" name="${h.escape(tab.name)}"
                             data-tab-name="${h.escape(tab.name)}">${tab.name}</button>
                 </j:forEach>
             </div>
