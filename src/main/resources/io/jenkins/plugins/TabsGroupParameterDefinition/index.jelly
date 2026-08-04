@@ -11,11 +11,11 @@
             <!-- Tab links -->
             <div class="tab">
                 <j:forEach var="tab" items="${it.tabs}" indexVar="index">
-                    <j:set var="id" value="not-selected"/>
+                    <j:set var="active" value=""/>
                     <j:if test="${index==0}">
-                        <j:set var="id" value="selected"/>
+                        <j:set var="active" value="active"/>
                     </j:if>
-                    <button type="button" id="${id}" class="tablinks" name="${h.escape(tab.name)}"
+                    <button type="button" class="tablinks ${active}" name="${h.escape(tab.name)}"
                            onclick="openTab(event, '${h.escape(tab.name)}')">${tab.name}</button>
                 </j:forEach>
             </div>

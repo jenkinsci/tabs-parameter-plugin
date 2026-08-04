@@ -29,7 +29,7 @@ class TabsGroupParameterDefinitionTest {
         Iterator<TabParametersDefinition> iterator =
                 tabsParamDefinition.getTabs().iterator();
         TabParametersDefinition next = iterator.next();
-        assertEquals("tab1", next.getName());
+        assertEquals("tab'1", next.getName());
         assertEquals("toto", next.getParameters().stream().findFirst().get().getName());
 
         next = iterator.next();
@@ -80,7 +80,7 @@ class TabsGroupParameterDefinitionTest {
 
         var tab1Params = new ArrayList<ParameterDefinition>();
         tab1Params.add(new StringParameterDefinition("toto", "def"));
-        tabs.add(new TabParametersDefinition("tab1", tab1Params));
+        tabs.add(new TabParametersDefinition("tab'1", tab1Params));
 
         var tab2Params = new ArrayList<ParameterDefinition>();
         tab2Params.add(new BooleanParameterDefinition("my-bool", true, "some boolean"));
