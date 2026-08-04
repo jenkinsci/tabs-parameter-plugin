@@ -89,8 +89,8 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
 
     @Override
     public TabsGroupParameterValue createValue(String value) {
-        // TODO for requests from CLI to work
-        return null;
+        throw new UnsupportedOperationException(
+                "String-based parameter parsing is not supported for '" + getName() + "'. Use form submission instead.");
     }
 
     public List<TabParametersDefinition> getTabs() {

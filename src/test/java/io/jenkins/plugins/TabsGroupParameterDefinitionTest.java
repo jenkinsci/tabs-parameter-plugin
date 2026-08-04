@@ -1,6 +1,7 @@
 package io.jenkins.plugins;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import hudson.model.*;
 import java.util.ArrayList;
@@ -63,6 +64,15 @@ class TabsGroupParameterDefinitionTest {
                 jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0, new ParametersAction(tabsGroupValue)));
         jenkins.assertLogContains("Param toto equals : tata", completedBuild);
         jenkins.assertLogContains("Selected tab : tab'1", completedBuild);
+    }
+
+    @Test
+    void createValueFromStringIsRejected() {
+        UnsupportedOperationException exception =
+                assertThrows(UnsupportedOperationException.class, () -> generateTabConfig().createValue("raw"));
+        assertEquals(
+                "String-based parameter parsing is not supported for 'tabsParam'. Use form submission instead.",
+                exception.getMessage());
     }
 
     private TabsGroupParameterDefinition generateTabConfig() {

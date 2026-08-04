@@ -45,7 +45,7 @@ params
 * Did not test recursion of tabs
 * Not tested compatibility with rebuild plugin
 * Only tested with base Jenkins Parameters
-* Cannot do POST requests (TabsGroupParameterDefinition#createValue(String) is not implemented)
+* Cannot do CLI/POST requests (TabsGroupParameterDefinition#createValue(String) is not implemented)
 * All parameters are passed to the build, even the ones not visible
 
 ## Technical Infos
