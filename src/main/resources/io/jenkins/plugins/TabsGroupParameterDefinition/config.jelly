@@ -3,10 +3,11 @@
     <f:entry title="${%Name}" field="name" help="/help/parameter/name.html">
         <f:textbox/>
     </f:entry>
-    <f:repeatable field="tabs" add="${%Add Tab}" header="${%Tab}">
+    <f:repeatable field="tabs" add="${%Add Tab}" header="${%Tab}" minimum="1">
         <f:entry field="name" title="${%Tab Name}">
             <f:textbox/>
         </f:entry>
+        <f:repeatableDeleteButton/>
         <f:nested>
             <f:repeatableHeteroProperty field="parameters" hasHeader="true" addCaption="${%Add Parameter}"/>
         </f:nested>
