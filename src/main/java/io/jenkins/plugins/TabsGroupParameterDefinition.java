@@ -130,11 +130,5 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
                 return FormValidation.error(Messages.TabsGroupParameterDefinition_ParameterDescriptorImpl_NameEmpty());
             else return FormValidation.ok();
         }
-
-        public FormValidation doCheckTabs(@QueryParameter String tabs) {
-            if (tabs.isEmpty())
-                return FormValidation.error(Messages.TabsGroupParameterDefinition_ParameterDescriptorImpl_TabsEmpty());
-            else return FormValidation.ok();
-        }
     }
 }
