@@ -1,11 +1,28 @@
 .tab {
   display: flex;
   overflow: hidden;
-  gap: .75rem;
+  /* took from view UI */
+  position: relative;
+  align-items: center;
+  background: var(--table-background);
+  border-radius: 19px;
+  padding: 2px;
+  margin-bottom: var(--section-padding);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: var(--jenkins-border-width) solid var(--card-border-color);
+    border-radius: inherit;
+    pointer-events: none;
+  }
 }
 
 .tab button {
   width:100%;
+  border-radius: 19px;
+  height: stretch;
   /* used to overflow long tab name */
   overflow: auto;
   word-wrap: break-word;
@@ -22,3 +39,4 @@
   padding: 20px 12px 0px 12px;
   border-bottom: 1px solid #ccc;
 }
+
