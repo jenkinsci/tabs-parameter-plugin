@@ -1,10 +1,9 @@
 package io.jenkins.plugins;
 
+import hudson.EnvVars;
 import hudson.model.ParameterValue;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import hudson.model.Run;
+import java.util.*;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 public class TabsGroupParameterValue extends ParameterValue {
@@ -42,6 +41,18 @@ public class TabsGroupParameterValue extends ParameterValue {
         }
         result.put(SELECTED_TAB_KEY, selectedTab);
         return result;
+    }
+
+    @Override
+    public void buildEnvironment(Run<?, ?> build, EnvVars env) {
+        for (TabParametersValue tab : tabsValues) {
+            for (ParameterValue param : tab.getParameters()) {
+                param.buildEnvironment(build, env);
+                var value = env.get(param.getName());
+                env.put(name + "." + tab.getName() + "." + param.getName(), value);
+            }
+        }
+        env.put(name + "." + SELECTED_TAB_KEY, selectedTab);
     }
 
     public List<TabParametersValue> getTabsValues() {
