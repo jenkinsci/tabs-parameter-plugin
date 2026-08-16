@@ -115,7 +115,7 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
     }
 
     @Extension
-    @Symbol("groupParam")
+    @Symbol("tabsParam")
     public static final class ParameterDescriptorImpl extends ParameterDescriptor {
         @NonNull
         @Override
