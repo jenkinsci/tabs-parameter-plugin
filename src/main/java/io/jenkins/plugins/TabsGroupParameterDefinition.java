@@ -5,7 +5,6 @@ import hudson.Extension;
 import hudson.model.ParameterDefinition;
 import hudson.model.ParameterValue;
 import hudson.model.SimpleParameterDefinition;
-import hudson.util.FormValidation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +13,6 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest2;
 
 /**
@@ -123,12 +121,6 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
         @Override
         public String getDisplayName() {
             return Messages.TabsGroupParameterDefinition_DisplayName();
-        }
-
-        public FormValidation doCheckName(@QueryParameter String name) {
-            if (name.isEmpty())
-                return FormValidation.error(Messages.TabsGroupParameterDefinition_ParameterDescriptorImpl_NameEmpty());
-            else return FormValidation.ok();
         }
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.verb.POST;
 
 /**
  * Describe a tab and parameters contained inside
@@ -54,12 +55,8 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
             return Messages.TabParametersDefinition_DescriptorImpl_DisplayName();
         }
 
-        public FormValidation doCheckParameters(@QueryParameter String parameters) {
-            if (parameters.isEmpty())
-                return FormValidation.error(Messages.TabParametersDefinition_DescriptorImpl_ParametersEmpty());
-            else return FormValidation.ok();
-        }
-
+        // lgtm[jenkins/no-permission-check]
+        @POST
         public FormValidation doCheckName(@QueryParameter String name) {
             if (name.isEmpty())
                 return FormValidation.error(Messages.TabParametersDefinition_DescriptorImpl_NameEmpty());
