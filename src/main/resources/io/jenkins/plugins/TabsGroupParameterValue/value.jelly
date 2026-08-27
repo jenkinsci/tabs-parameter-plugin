@@ -8,19 +8,22 @@
             <!-- Tab links -->
             <div class="tab">
                 <j:forEach var="tab" items="${it.tabsValues}">
-                    <input type="button" disabled="true" id="${it.getTabButtonId(tab)}" value="${tab.name}"
-                           class="tablinks"/>
+                    <j:set var="active" value=""/>
+                    <j:if test="${it.isSelectedTab(tab)}">
+                        <j:set var="active" value=" active"/>
+                    </j:if>
+                    <button type="button" disabled="true" class="jenkins-button tablinks${active}" name="${tab.uid}"
+                            data-tab-uid="${tab.uid}">${tab.name}</button>
                 </j:forEach>
             </div>
 
-            <j:forEach var="tab" items="${it.tabsValues}">
-                <!-- Tab content -->
-                <div name="${tab.name}" id="${tab.name}" class="tabcontent">
-                    <j:forEach var="parameterValue" items="${tab.parameters}">
-                        <st:include it="${parameterValue}" page="value.jelly"/>
-                    </j:forEach>
-                </div>
-            </j:forEach>
+            <j:set var="tab" value="${it.selectedTab}"/>
+            <!-- Tab content -->
+            <div name="tabsValues" id="${tab.uid}" class="tabcontent">
+                <j:forEach var="parameterValue" items="${tab.parameters}">
+                    <st:include it="${parameterValue}" page="value.jelly"/>
+                </j:forEach>
+            </div>
         </div>
     </f:entry>
     <st:adjunct includes="io.jenkins.plugins.TabsGroupParameterDefinition.tabs"/>

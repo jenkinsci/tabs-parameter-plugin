@@ -1,6 +1,6 @@
 function openTab(tabButton) {
     // Declare all variables
-    let i, tabcontent, tablinks;
+    let tabcontent, tablinks;
 
     // Get all elements with class="tabcontent" and hide them
     tabcontent = document.querySelectorAll(".tabcontent");
@@ -17,8 +17,8 @@ function openTab(tabButton) {
     })
 
     // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(tabButton.dataset.tabName).style.display = "block";
-    document.getElementById("selected-tab-input").value = tabButton.innerText;
+    document.getElementById(tabButton.dataset.tabUid).style.display = "block";
+    document.getElementById("selected-tab-input").value = tabButton.dataset.tabUid;
     tabButton.classList.add("active");
 }
 

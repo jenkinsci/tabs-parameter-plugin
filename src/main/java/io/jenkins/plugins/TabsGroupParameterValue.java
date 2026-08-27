@@ -10,19 +10,19 @@ public class TabsGroupParameterValue extends ParameterValue {
 
     /**
      * Reserved key used to expose the selected tab name in the map returned by {@link #getValue()}.
-     * Tab names and parameter names must not collide with this key.
+     * Tab names must not collide with this key.
      */
     public static final String SELECTED_TAB_KEY = "selectedTab";
 
     private final List<TabParametersValue> tabsValues;
 
-    private final String selectedTab;
+    private final long selectedTabUid;
 
     @DataBoundConstructor
-    public TabsGroupParameterValue(String name, List<TabParametersValue> tabsValues, String selectedTab) {
+    public TabsGroupParameterValue(String name, List<TabParametersValue> tabsValues, Long selectedTabUid) {
         super(name);
         this.tabsValues = Objects.requireNonNull(tabsValues, "tabsValues must not be null");
-        this.selectedTab = selectedTab;
+        this.selectedTabUid = selectedTabUid;
     }
 
     /**
@@ -32,42 +32,50 @@ public class TabsGroupParameterValue extends ParameterValue {
     @Override
     public Map<String, Object> getValue() {
         var result = new LinkedHashMap<String, Object>();
-        for (TabParametersValue tab : tabsValues) {
-            var paramMap = new LinkedHashMap<String, Object>();
-            for (ParameterValue param : tab.getParameters()) {
-                paramMap.put(param.getName(), param.getValue());
-            }
-            result.put(tab.getName(), paramMap);
-        }
-        result.put(SELECTED_TAB_KEY, selectedTab);
+        var paramMap = new LinkedHashMap<String, Object>();
+        tabsValues.stream()
+                .filter(tabParametersValue -> tabParametersValue.getUid() == selectedTabUid)
+                .findFirst()
+                .ifPresent(tab -> {
+                    for (ParameterValue param : tab.getParameters()) {
+                        result.put(param.getName(), param.getValue());
+                    }
+                    result.put(SELECTED_TAB_KEY, tab.getName());
+                });
         return result;
     }
 
     @Override
     public void buildEnvironment(Run<?, ?> build, EnvVars env) {
-        for (TabParametersValue tab : tabsValues) {
-            for (ParameterValue param : tab.getParameters()) {
-                param.buildEnvironment(build, env);
-                var value = env.get(param.getName());
-                env.put(name + "." + tab.getName() + "." + param.getName(), value);
-            }
-        }
-        env.put(name + "." + SELECTED_TAB_KEY, selectedTab);
+        tabsValues.stream()
+                .filter(tabParametersValue -> tabParametersValue.getUid() == selectedTabUid)
+                .findFirst()
+                .ifPresent(tab -> {
+                    for (ParameterValue param : tab.getParameters()) {
+                        param.buildEnvironment(build, env);
+                        var value = env.get(param.getName());
+                        env.put(name + ".selectedTab." + param.getName(), value);
+                    }
+                });
     }
 
     public List<TabParametersValue> getTabsValues() {
         return tabsValues;
     }
 
-    public String getSelectedTab() {
-        return selectedTab;
+    public Long getSelectedTabUid() {
+        return selectedTabUid;
     }
 
-    public String getTabButtonId(TabParametersValue tab) {
-        if (tab.getName().equals(selectedTab)) {
-            return "selected";
-        }
-        return "not-selected";
+    public boolean isSelectedTab(TabParametersValue tab) {
+        return tab.getUid() == selectedTabUid;
+    }
+
+    public TabParametersValue getSelectedTab() {
+        return tabsValues.stream()
+                .filter(tabParametersValue -> tabParametersValue.getUid() == selectedTabUid)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
@@ -76,11 +84,11 @@ public class TabsGroupParameterValue extends ParameterValue {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         TabsGroupParameterValue that = (TabsGroupParameterValue) o;
-        return Objects.equals(tabsValues, that.tabsValues) && Objects.equals(selectedTab, that.selectedTab);
+        return Objects.equals(tabsValues, that.tabsValues) && Objects.equals(selectedTabUid, that.selectedTabUid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), tabsValues, selectedTab);
+        return Objects.hash(super.hashCode(), tabsValues, selectedTabUid);
     }
 }

@@ -43,18 +43,18 @@ class TabsGroupParameterDefinitionTest {
 
         var tab1Params = new ArrayList<ParameterValue>();
         tab1Params.add(new StringParameterValue("toto", "tata"));
-        tabs.add(new TabParametersValue("tab'1", tab1Params));
+        tabs.add(new TabParametersValue(12345L, "tab'1", tab1Params));
 
         var tab2Params = new ArrayList<ParameterValue>();
         tab2Params.add(new BooleanParameterValue("my-bool", true, "some boolean"));
-        tabs.add(new TabParametersValue("tab2", tab2Params));
+        tabs.add(new TabParametersValue(123456L, "tab2", tab2Params));
 
-        var tabsGroupValue = new TabsGroupParameterValue("tabsParam", tabs, "tab'1");
+        var tabsGroupValue = new TabsGroupParameterValue("tabsParam", tabs, 12345L);
 
         WorkflowJob job = jenkins.createProject(WorkflowJob.class, "test-scripted-pipeline");
         job.addProperty(new ParametersDefinitionProperty(generateTabConfig()));
         String pipelineScript = """
-                echo "Param toto equals : ${params.tabsParam["tab'1"].toto}"
+                echo "Param toto equals : ${params.tabsParam.toto}"
                 echo "Selected tab : ${params.tabsParam.selectedTab}"
                 """;
 

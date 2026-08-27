@@ -38,15 +38,15 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
         Objects.requireNonNull(jo, "request payload must not be null");
 
         String name = Objects.requireNonNull(jo.getString("name"), "parameter group name must not be null");
-        String selectedTabValue = Objects.requireNonNull(jo.getString("selectedTab"), "selectedTab must not be null");
-        // TODO handle selectedValue empty
-        var groupParameterValue = new TabsGroupParameterValue(name, new ArrayList<>(), selectedTabValue);
+        long selectedTabUidRaw = jo.getLong("selectedTabUid");
+        var groupParameterValue = new TabsGroupParameterValue(name, new ArrayList<>(), selectedTabUidRaw);
 
         Object rawTabsValues = Objects.requireNonNull(jo.get("tabsValues"), "tabsValues must not be null");
         Iterable<Object> tabsValues = toIterable(rawTabsValues);
 
         tabsValues.forEach(tab -> {
             var tabJSONObject = JSONObject.fromObject(tab);
+            var tabUid = tabJSONObject.getLong("uid");
             var tabName = tabJSONObject.getString("name");
 
             var parametersValues = new ArrayList<ParameterValue>();
@@ -59,13 +59,13 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
                     parametersValues.add(paramDefinition.createValue(req, jsonParameter));
                 });
             }
-            groupParameterValue.getTabsValues().add(new TabParametersValue(tabName, parametersValues));
+            groupParameterValue.getTabsValues().add(new TabParametersValue(tabUid, tabName, parametersValues));
         });
 
         return groupParameterValue;
     }
 
-    private Iterable<Object> toIterable(Object maybeIterable) {
+    private List<Object> toIterable(Object maybeIterable) {
         if (maybeIterable instanceof JSONArray jsonArray) {
             return jsonArray;
         } else {

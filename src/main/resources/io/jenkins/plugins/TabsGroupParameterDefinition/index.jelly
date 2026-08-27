@@ -6,7 +6,7 @@
     <f:entry title="${h.escape(it.name)}" description="${it.formattedDescription}">
         <div name="parameter">
             <input type="hidden" name="name" value="${it.name}"/>
-            <input type="hidden" id="selected-tab-input" name="selectedTab"/>
+            <input type="hidden" id="selected-tab-input" name="selectedTabUid"/>
 
             <!-- Tab links -->
             <div class="tab">
@@ -15,14 +15,15 @@
                     <j:if test="${index==0}">
                         <j:set var="active" value="active"/>
                     </j:if>
-                    <button type="button" class="jenkins-button tablinks ${active}" name="${h.escape(tab.name)}"
-                            data-tab-name="${h.escape(tab.name)}">${tab.name}</button>
+                    <button type="button" class="jenkins-button tablinks ${active}" name="${tab.uid}"
+                            data-tab-uid="${tab.uid}">${tab.name}</button>
                 </j:forEach>
             </div>
 
             <j:forEach var="tab" items="${it.tabs}">
                 <!-- Tab content -->
-                <div name="tabsValues" id="${h.escape(tab.name)}" class="tabcontent">
+                <div name="tabsValues" id="${tab.uid}" class="tabcontent">
+                    <input type="hidden" name="uid" value="${tab.uid}"/>
                     <input type="hidden" name="name" value="${tab.name}"/>
                     <j:forEach var="parameterDefinition" items="${tab.parameters}">
                         <j:set var="escapeEntryTitleAndDescription" value="true"/> <!-- SECURITY-353 defense unless overridden -->
