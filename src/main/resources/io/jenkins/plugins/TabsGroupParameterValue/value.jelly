@@ -15,7 +15,8 @@
                                 <j:set var="active" value=" active"/>
                             </j:if>
                             <div class="tab${active}" data-tab-uid="${tab.uid}">
-                                <a name="${tab.uid}" data-tab-uid="${tab.uid}" disabled="true"  class="tablinks">${tab.name}</a>
+                                <!-- How to disable the link ?  -->
+                                <a name="${tab.uid}" data-tab-uid="${tab.uid}" disabled="true" class="tgp-tablinks">${tab.name}</a>
                             </div>
                         </j:forEach>
                     </div>
@@ -24,7 +25,7 @@
 
             <j:set var="tab" value="${it.selectedTab}"/>
             <!-- Tab content -->
-            <div name="tabsValues" id="${tab.uid}" class="tabcontent">
+            <div name="tabsValues" id="${tab.uid}" class="tgp-tabcontent">
                 <j:forEach var="parameterValue" items="${tab.parameters}">
                     <st:include it="${parameterValue}" page="value.jelly"/>
                 </j:forEach>

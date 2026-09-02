@@ -4,9 +4,9 @@
 >
     <j:set var="escapeEntryTitleAndDescription" value="false"/>
     <f:entry title="${h.escape(it.name)}" description="${it.formattedDescription}">
-        <div name="parameter">
+        <div name="parameter" class="tgp-container">
             <input type="hidden" name="name" value="${it.name}"/>
-            <input type="hidden" id="selected-tab-input" name="selectedTabUid"/>
+            <input type="hidden" id="selected-tab-input-${h.escape(it.name)}" name="selectedTabUid"/>
 
             <!-- Tab links -->
             <div id="projectstatus-tabBar">
@@ -17,8 +17,8 @@
                             <j:if test="${index==0}">
                                 <j:set var="active" value="active"/>
                             </j:if>
-                            <div class="tab ${active}" data-tab-uid="${tab.uid}">
-                                <a name="${tab.uid}" data-tab-uid="${tab.uid}" class="tablinks">${tab.name}</a>
+                            <div class="tab ${active}" data-tab-uid="${tab.uid}" data-selected-tab-id="selected-tab-input-${h.escape(it.name)}">
+                                <a name="${tab.uid}" data-tab-uid="${tab.uid}" data-selected-tab-id="selected-tab-input-${h.escape(it.name)}" class="tgp-tablinks">${tab.name}</a>
                             </div>
                         </j:forEach>
                     </div>
@@ -31,7 +31,7 @@
                     <j:set var="hiddenClass" value="jenkins-hidden"/>
                 </j:if>
                 <!-- Tab content -->
-                <div name="tabsValues" id="${tab.uid}" class="tabcontent ${hiddenClass}">
+                <div name="tabsValues" id="${tab.uid}" class="tgp-tabcontent ${hiddenClass}">
                     <input type="hidden" name="uid" value="${tab.uid}"/>
                     <input type="hidden" name="name" value="${tab.name}"/>
                     <j:forEach var="parameterDefinition" items="${tab.parameters}">
