@@ -32,7 +32,6 @@ public class TabsGroupParameterValue extends ParameterValue {
     @Override
     public Map<String, Object> getValue() {
         var result = new LinkedHashMap<String, Object>();
-        var paramMap = new LinkedHashMap<String, Object>();
         tabsValues.stream()
                 .filter(tabParametersValue -> tabParametersValue.getUid() == selectedTabUid)
                 .findFirst()
@@ -54,8 +53,9 @@ public class TabsGroupParameterValue extends ParameterValue {
                     for (ParameterValue param : tab.getParameters()) {
                         param.buildEnvironment(build, env);
                         var value = env.get(param.getName());
-                        env.put(name + ".selectedTab." + param.getName(), value);
+                        env.put(name + "." + param.getName(), value);
                     }
+                    env.put(name + "." + SELECTED_TAB_KEY, tab.getName());
                 });
     }
 

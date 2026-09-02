@@ -56,7 +56,8 @@ class TabsGroupParameterDefinitionTest {
         String pipelineScript = """
                 echo "Param toto equals : ${params.tabsParam.toto}"
                 echo "Selected tab : ${params.tabsParam.selectedTab}"
-                echo "Env toto equals : ${env.('tabsParam.selectedTab.toto')}"
+                echo "Env toto equals : ${env.('tabsParam.toto')}"
+                echo "Env Selected tab : ${env.('tabsParam.selectedTab')}"
                 """;
 
         job.setDefinition(new CpsFlowDefinition(pipelineScript, true));
@@ -64,6 +65,8 @@ class TabsGroupParameterDefinitionTest {
                 jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0, new ParametersAction(tabsGroupValue)));
         jenkins.assertLogContains("Param toto equals : tata", completedBuild);
         jenkins.assertLogContains("Selected tab : tab'1", completedBuild);
+        jenkins.assertLogContains("Env toto equals : tata", completedBuild);
+        jenkins.assertLogContains("Env Selected tab : tab'1", completedBuild);
     }
 
     @Test

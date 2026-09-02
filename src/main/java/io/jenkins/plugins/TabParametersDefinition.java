@@ -41,6 +41,11 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
             throw new IllegalArgumentException(
                     "TabsGroupParameterDefinition cannot be nested inside TabParametersDefinition");
         }
+        if (this.parameters.stream()
+                .anyMatch(param -> TabsGroupParameterValue.SELECTED_TAB_KEY.equals(param.getName()))) {
+            throw new IllegalArgumentException("Parameter name '" + TabsGroupParameterValue.SELECTED_TAB_KEY
+                    + "' is reserved and cannot be used inside a tab");
+        }
     }
 
     public List<ParameterDefinition> getParameters() {
@@ -74,9 +79,6 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
         public FormValidation doCheckName(@QueryParameter String name) {
             if (name.isEmpty())
                 return FormValidation.error(Messages.TabParametersDefinition_DescriptorImpl_NameEmpty());
-            if (TabsGroupParameterValue.SELECTED_TAB_KEY.equals(name))
-                return FormValidation.error(Messages.TabParametersDefinition_DescriptorImpl_NameReserved(
-                        TabsGroupParameterValue.SELECTED_TAB_KEY));
             return FormValidation.ok();
         }
     }
