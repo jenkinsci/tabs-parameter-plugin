@@ -4,7 +4,7 @@ function openTab(tabButton) {
     const container = tabButton.closest(".tgp-container")
 
     // Get all elements with class="tabcontent" and hide them
-    tabcontent = container.querySelectorAll(".tgp-tabcontent");
+    tabcontent = container.querySelectorAll(".tgp-tab__content");
     tabcontent.forEach(tab => {
         tab.classList.add("jenkins-hidden");
     })

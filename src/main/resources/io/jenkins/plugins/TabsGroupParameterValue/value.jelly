@@ -25,7 +25,7 @@
 
             <j:set var="tab" value="${it.selectedTab}"/>
             <!-- Tab content -->
-            <div name="tabsValues" id="${tab.uid}" class="tgp-tabcontent">
+            <div name="tabsValues" id="${tab.uid}" class="tgp-tab__content">
                 <j:forEach var="parameterValue" items="${tab.parameters}">
                     <st:include it="${parameterValue}" page="value.jelly"/>
                 </j:forEach>
