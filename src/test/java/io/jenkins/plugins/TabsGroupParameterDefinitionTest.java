@@ -56,6 +56,7 @@ class TabsGroupParameterDefinitionTest {
         String pipelineScript = """
                 echo "Param toto equals : ${params.tabsParam.toto}"
                 echo "Selected tab : ${params.tabsParam.selectedTab}"
+                echo "Env toto equals : ${env.('tabsParam.selectedTab.toto')}"
                 """;
 
         job.setDefinition(new CpsFlowDefinition(pipelineScript, true));
