@@ -37,6 +37,10 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
         this.uid = ThreadLocalRandom.current().nextLong();
         this.name = name;
         this.parameters = parameters;
+        if (this.parameters.stream().anyMatch(param -> param instanceof TabsGroupParameterDefinition)) {
+            throw new IllegalArgumentException(
+                    "TabsGroupParameterDefinition cannot be nested inside TabParametersDefinition");
+        }
     }
 
     public List<ParameterDefinition> getParameters() {
