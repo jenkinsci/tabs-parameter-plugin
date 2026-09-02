@@ -6,15 +6,20 @@
         <div name="parameter">
             <input type="hidden" id="selected-tab-input" name="selectedTab"/>
             <!-- Tab links -->
-            <div class="tab">
-                <j:forEach var="tab" items="${it.tabsValues}">
-                    <j:set var="active" value=""/>
-                    <j:if test="${it.isSelectedTab(tab)}">
-                        <j:set var="active" value=" active"/>
-                    </j:if>
-                    <button type="button" disabled="true" class="jenkins-button tablinks${active}" name="${tab.uid}"
-                            data-tab-uid="${tab.uid}">${tab.name}</button>
-                </j:forEach>
+            <div id="projectstatus-tabBar">
+                <div class="tabBarFrame">
+                    <div class="tabBar">
+                        <j:forEach var="tab" items="${it.tabsValues}">
+                            <j:set var="active" value=""/>
+                            <j:if test="${it.isSelectedTab(tab)}">
+                                <j:set var="active" value=" active"/>
+                            </j:if>
+                            <div class="tab${active}" data-tab-uid="${tab.uid}">
+                                <a name="${tab.uid}" data-tab-uid="${tab.uid}" disabled="true"  class="tablinks">${tab.name}</a>
+                            </div>
+                        </j:forEach>
+                    </div>
+                </div>
             </div>
 
             <j:set var="tab" value="${it.selectedTab}"/>

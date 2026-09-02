@@ -9,20 +9,29 @@
             <input type="hidden" id="selected-tab-input" name="selectedTabUid"/>
 
             <!-- Tab links -->
-            <div class="tab">
-                <j:forEach var="tab" items="${it.tabs}" indexVar="index">
-                    <j:set var="active" value=""/>
-                    <j:if test="${index==0}">
-                        <j:set var="active" value="active"/>
-                    </j:if>
-                    <button type="button" class="jenkins-button tablinks ${active}" name="${tab.uid}"
-                            data-tab-uid="${tab.uid}">${tab.name}</button>
-                </j:forEach>
+            <div id="projectstatus-tabBar">
+                <div class="tabBarFrame">
+                    <div class="tabBar">
+                        <j:forEach var="tab" items="${it.tabs}" indexVar="index">
+                            <j:set var="active" value=""/>
+                            <j:if test="${index==0}">
+                                <j:set var="active" value="active"/>
+                            </j:if>
+                            <div class="tab ${active}" data-tab-uid="${tab.uid}">
+                                <a name="${tab.uid}" data-tab-uid="${tab.uid}" class="tablinks">${tab.name}</a>
+                            </div>
+                        </j:forEach>
+                    </div>
+                </div>
             </div>
 
-            <j:forEach var="tab" items="${it.tabs}">
+            <j:forEach var="tab" items="${it.tabs}" indexVar="index">
+                <j:set var="hiddenClass" value=""/>
+                <j:if test="${index!=0}">
+                    <j:set var="hiddenClass" value="jenkins-hidden"/>
+                </j:if>
                 <!-- Tab content -->
-                <div name="tabsValues" id="${tab.uid}" class="tabcontent">
+                <div name="tabsValues" id="${tab.uid}" class="tabcontent ${hiddenClass}">
                     <input type="hidden" name="uid" value="${tab.uid}"/>
                     <input type="hidden" name="name" value="${tab.name}"/>
                     <j:forEach var="parameterDefinition" items="${tab.parameters}">
