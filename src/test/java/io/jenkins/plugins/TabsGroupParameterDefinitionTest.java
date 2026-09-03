@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import hudson.model.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.UUID;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
@@ -43,13 +44,14 @@ class TabsGroupParameterDefinitionTest {
 
         var tab1Params = new ArrayList<ParameterValue>();
         tab1Params.add(new StringParameterValue("toto", "tata"));
-        tabs.add(new TabParametersValue(12345L, "tab'1", tab1Params));
+        UUID uid = UUID.randomUUID();
+        tabs.add(new TabParametersValue(uid, "tab'1", tab1Params));
 
         var tab2Params = new ArrayList<ParameterValue>();
         tab2Params.add(new BooleanParameterValue("my-bool", true, "some boolean"));
-        tabs.add(new TabParametersValue(123456L, "tab2", tab2Params));
+        tabs.add(new TabParametersValue(UUID.randomUUID(), "tab2", tab2Params));
 
-        var tabsGroupValue = new TabsGroupParameterValue("tabsParam", tabs, 12345L);
+        var tabsGroupValue = new TabsGroupParameterValue("tabsParam", tabs, uid);
 
         WorkflowJob job = jenkins.createProject(WorkflowJob.class, "test-scripted-pipeline");
         job.addProperty(new ParametersDefinitionProperty(generateTabConfig()));

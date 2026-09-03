@@ -20,10 +20,10 @@ public class TabsGroupParameterValue extends ParameterValue {
 
     private final List<TabParametersValue> tabsValues;
 
-    private final long selectedTabUid;
+    private final UUID selectedTabUid;
 
     @DataBoundConstructor
-    public TabsGroupParameterValue(String name, List<TabParametersValue> tabsValues, Long selectedTabUid) {
+    public TabsGroupParameterValue(String name, List<TabParametersValue> tabsValues, UUID selectedTabUid) {
         super(name);
         this.tabsValues = Objects.requireNonNull(tabsValues, "tabsValues must not be null");
         this.selectedTabUid = selectedTabUid;
@@ -37,7 +37,7 @@ public class TabsGroupParameterValue extends ParameterValue {
     public Map<String, Object> getValue() {
         var result = new LinkedHashMap<String, Object>();
         tabsValues.stream()
-                .filter(tabParametersValue -> tabParametersValue.getUid() == selectedTabUid)
+                .filter(tabParametersValue -> Objects.equals(tabParametersValue.getUid(), selectedTabUid))
                 .findFirst()
                 .ifPresent(tab -> {
                     Map<String, Object> paramMap = new LinkedHashMap<>();
@@ -53,7 +53,7 @@ public class TabsGroupParameterValue extends ParameterValue {
     @Override
     public void buildEnvironment(Run<?, ?> build, EnvVars env) {
         tabsValues.stream()
-                .filter(tabParametersValue -> tabParametersValue.getUid() == selectedTabUid)
+                .filter(tabParametersValue -> Objects.equals(tabParametersValue.getUid(), selectedTabUid))
                 .findFirst()
                 .ifPresent(tab -> {
                     for (ParameterValue param : tab.getParameters()) {
@@ -69,17 +69,17 @@ public class TabsGroupParameterValue extends ParameterValue {
         return tabsValues;
     }
 
-    public Long getSelectedTabUid() {
+    public UUID getSelectedTabUid() {
         return selectedTabUid;
     }
 
     public boolean isSelectedTab(TabParametersValue tab) {
-        return tab.getUid() == selectedTabUid;
+        return Objects.equals(tab.getUid(), selectedTabUid);
     }
 
     public TabParametersValue getSelectedTab() {
         return tabsValues.stream()
-                .filter(tabParametersValue -> tabParametersValue.getUid() == selectedTabUid)
+                .filter(tabParametersValue -> Objects.equals(tabParametersValue.getUid(), selectedTabUid))
                 .findFirst()
                 .orElse(null);
     }

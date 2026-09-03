@@ -5,10 +5,7 @@ import hudson.Extension;
 import hudson.model.ParameterDefinition;
 import hudson.model.ParameterValue;
 import hudson.model.SimpleParameterDefinition;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jenkinsci.Symbol;
@@ -38,7 +35,7 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
         Objects.requireNonNull(jo, "request payload must not be null");
 
         String name = Objects.requireNonNull(jo.getString("name"), "parameter group name must not be null");
-        long selectedTabUidRaw = jo.getLong("selectedTabUid");
+        var selectedTabUidRaw = UUID.fromString(jo.getString("selectedTabUid"));
         var groupParameterValue = new TabsGroupParameterValue(name, new ArrayList<>(), selectedTabUidRaw);
 
         Object rawTabsValues = Objects.requireNonNull(jo.get("tabsValues"), "tabsValues must not be null");
@@ -46,7 +43,7 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
 
         tabsValues.forEach(tab -> {
             var tabJSONObject = JSONObject.fromObject(tab);
-            var tabUid = tabJSONObject.getLong("uid");
+            var tabUid = UUID.fromString(tabJSONObject.getString("uid"));
             var tabName = tabJSONObject.getString("name");
 
             var parametersValues = new ArrayList<ParameterValue>();

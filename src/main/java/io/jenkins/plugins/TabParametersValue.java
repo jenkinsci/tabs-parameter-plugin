@@ -3,15 +3,16 @@ package io.jenkins.plugins;
 import hudson.model.ParameterValue;
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 public class TabParametersValue implements Serializable {
-    private final long uid;
+    private final UUID uid;
     private final String name;
     private final List<ParameterValue> parameters;
 
     @DataBoundConstructor
-    public TabParametersValue(long uid, String name, List<ParameterValue> parameters) {
+    public TabParametersValue(UUID uid, String name, List<ParameterValue> parameters) {
         this.uid = uid;
         this.name = name;
         this.parameters = parameters;
@@ -25,7 +26,7 @@ public class TabParametersValue implements Serializable {
         return parameters;
     }
 
-    public long getUid() {
+    public UUID getUid() {
         return uid;
     }
 

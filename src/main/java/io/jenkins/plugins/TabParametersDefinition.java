@@ -8,7 +8,7 @@ import hudson.model.ParameterDefinition;
 import hudson.util.FormValidation;
 import java.io.Serializable;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.UUID;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -22,7 +22,7 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
     /**
      * UUID for tab lookup
      */
-    private final long uid;
+    private final UUID uid;
     /**
      * Name of the tab
      */
@@ -34,7 +34,7 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
 
     @DataBoundConstructor
     public TabParametersDefinition(String name, List<ParameterDefinition> parameters) {
-        this.uid = ThreadLocalRandom.current().nextLong();
+        this.uid = UUID.randomUUID();
         this.name = name;
         this.parameters = parameters;
         if (this.parameters.stream().anyMatch(param -> param instanceof TabsGroupParameterDefinition)) {
@@ -56,7 +56,7 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
         return name;
     }
 
-    public long getUid() {
+    public UUID getUid() {
         return uid;
     }
 
