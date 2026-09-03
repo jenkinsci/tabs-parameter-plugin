@@ -23,18 +23,19 @@ Heavily inspired by uno choice plugin.
 Install the plugin on your Jenkins instance. 
 Add a "Tabs parameter" as you would add any other [build parameter](https://plugins.jenkins.io/build-with-parameters/)
 
-Then you can access the parameters of the tab selected by the user with `params.tabGroupName.paramName` in your pipeline job.
+Then you can access the parameters of the tab selected by the user with `params.tabGroupName.selectedParams.paramName` in your pipeline job.
 You can also access the selected tab name as `params.tabGroupName.selectedTab`.
-You can also access the parameters through environment variables as `env.(tabGroupName.selectedTab)`.
+You can also access the parameters through environment variables as `env.(tabGroupName.selectedParams.selectedTab)`.
 
 The layout of the parameter is defined like : 
 
 ```
 params
 └── tabGroupName
-    ├── selectedTab <= This is the name of the selected tab and a reserved key
-    ├── paramName1
-    └── paramName2
+    ├── selectedTab <= This contains the name of the selected tab
+    └── selectedParams
+        ├── paramName1
+        └── paramName2
 ```
 
 ## Limitations:

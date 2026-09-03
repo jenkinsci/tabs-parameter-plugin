@@ -13,6 +13,10 @@ public class TabsGroupParameterValue extends ParameterValue {
      * Tab names must not collide with this key.
      */
     public static final String SELECTED_TAB_KEY = "selectedTab";
+    /**
+     * To prevent users from overriding selected tab key, we use another key to put the params values
+     */
+    public static final String SELECTED_TAB_PARAMS_KEY = "selectedParams";
 
     private final List<TabParametersValue> tabsValues;
 
@@ -36,9 +40,11 @@ public class TabsGroupParameterValue extends ParameterValue {
                 .filter(tabParametersValue -> tabParametersValue.getUid() == selectedTabUid)
                 .findFirst()
                 .ifPresent(tab -> {
+                    Map<String, Object> paramMap = new LinkedHashMap<>();
                     for (ParameterValue param : tab.getParameters()) {
-                        result.put(param.getName(), param.getValue());
+                        paramMap.put(param.getName(), param.getValue());
                     }
+                    result.put(SELECTED_TAB_PARAMS_KEY, paramMap);
                     result.put(SELECTED_TAB_KEY, tab.getName());
                 });
         return result;
@@ -53,7 +59,7 @@ public class TabsGroupParameterValue extends ParameterValue {
                     for (ParameterValue param : tab.getParameters()) {
                         param.buildEnvironment(build, env);
                         var value = env.get(param.getName());
-                        env.put(name + "." + param.getName(), value);
+                        env.put(name + "." + SELECTED_TAB_PARAMS_KEY + "." + param.getName(), value);
                     }
                     env.put(name + "." + SELECTED_TAB_KEY, tab.getName());
                 });

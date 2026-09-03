@@ -54,9 +54,9 @@ class TabsGroupParameterDefinitionTest {
         WorkflowJob job = jenkins.createProject(WorkflowJob.class, "test-scripted-pipeline");
         job.addProperty(new ParametersDefinitionProperty(generateTabConfig()));
         String pipelineScript = """
-                echo "Param toto equals : ${params.tabsParam.toto}"
+                echo "Param toto equals : ${params.tabsParam.selectedParams.toto}"
                 echo "Selected tab : ${params.tabsParam.selectedTab}"
-                echo "Env toto equals : ${env.('tabsParam.toto')}"
+                echo "Env toto equals : ${env.('tabsParam.selectedParams.toto')}"
                 echo "Env Selected tab : ${env.('tabsParam.selectedTab')}"
                 """;
 
