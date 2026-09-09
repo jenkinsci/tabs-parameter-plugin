@@ -59,7 +59,9 @@ public class TabsGroupParameterValue extends ParameterValue {
                     for (ParameterValue param : tab.getParameters()) {
                         param.buildEnvironment(build, env);
                         var value = env.get(param.getName());
-                        env.put(name + "." + SELECTED_TAB_PARAMS_KEY + "." + param.getName(), value);
+                        if (value != null) {
+                            env.put(name + "." + SELECTED_TAB_PARAMS_KEY + "." + param.getName(), value);
+                        }
                     }
                     env.put(name + "." + SELECTED_TAB_KEY, tab.getName());
                 });

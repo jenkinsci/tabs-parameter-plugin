@@ -7,6 +7,7 @@ import hudson.model.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
+import jenkins.plugins.parameter_separator.ParameterSeparatorValue;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
@@ -44,6 +45,7 @@ class TabsGroupParameterDefinitionTest {
 
         var tab1Params = new ArrayList<ParameterValue>();
         tab1Params.add(new StringParameterValue("toto", "tata"));
+        tab1Params.add(new ParameterSeparatorValue("nullable", null, null, null));
         UUID uid = UUID.randomUUID();
         tabs.add(new TabParametersValue(uid, "tab'1", tab1Params));
 
@@ -57,8 +59,10 @@ class TabsGroupParameterDefinitionTest {
         job.addProperty(new ParametersDefinitionProperty(generateTabConfig()));
         String pipelineScript = """
                 echo "Param toto equals : ${params.tabsParam.selectedParams.toto}"
+                echo "Param nullable equals : ${params.tabsParam.selectedParams.nullable}"
                 echo "Selected tab : ${params.tabsParam.selectedTab}"
                 echo "Env toto equals : ${env.('tabsParam.selectedParams.toto')}"
+                echo "Env nullable equals : ${env.('tabsParam.selectedParams.nullable')}"
                 echo "Env Selected tab : ${env.('tabsParam.selectedTab')}"
                 """;
 
@@ -66,8 +70,10 @@ class TabsGroupParameterDefinitionTest {
         WorkflowRun completedBuild =
                 jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0, new ParametersAction(tabsGroupValue)));
         jenkins.assertLogContains("Param toto equals : tata", completedBuild);
+        jenkins.assertLogContains("Param nullable equals : ", completedBuild);
         jenkins.assertLogContains("Selected tab : tab'1", completedBuild);
         jenkins.assertLogContains("Env toto equals : tata", completedBuild);
+        jenkins.assertLogContains("Env nullable equals : ", completedBuild);
         jenkins.assertLogContains("Env Selected tab : tab'1", completedBuild);
     }
 
