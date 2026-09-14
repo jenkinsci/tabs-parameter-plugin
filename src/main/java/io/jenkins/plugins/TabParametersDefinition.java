@@ -2,6 +2,7 @@ package io.jenkins.plugins;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
+import hudson.ExtensionList;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.ParameterDefinition;
@@ -80,6 +81,12 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
             if (name.isEmpty())
                 return FormValidation.error(Messages.TabParametersDefinition_DescriptorImpl_NameEmpty());
             return FormValidation.ok();
+        }
+
+        public List<ParameterDefinition.ParameterDescriptor> getParametersDescriptors() {
+            return ExtensionList.lookup(ParameterDefinition.ParameterDescriptor.class).stream()
+                    .filter(descriptor -> descriptor.clazz != TabsGroupParameterDefinition.class)
+                    .toList();
         }
     }
 }
