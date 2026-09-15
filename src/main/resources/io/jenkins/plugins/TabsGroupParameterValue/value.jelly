@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:st="jelly:stapler">
-    <j:set var="escapeEntryTitleAndDescription" value="true"/>
-    <f:entry title="${h.escape(it.name)}" description="${it.formattedDescription}">
+    <j:set var="escapeEntryTitleAndDescription" value="false"/>
+    <f:entry title="${h.escape(it.name)}">
         <div name="parameter">
             <input type="hidden" id="selected-tab-input" name="selectedTab"/>
             <!-- Tab links -->
