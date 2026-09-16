@@ -22,8 +22,9 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
 
     /**
      * UUID for tab lookup
+     * Transient because we don't want it in the config.xml, to keep history of "config history plugin" clean
      */
-    private final UUID uid;
+    private transient UUID uid;
     /**
      * Name of the tab
      */
@@ -35,7 +36,7 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
 
     @DataBoundConstructor
     public TabParametersDefinition(String name, List<ParameterDefinition> parameters) {
-        this.uid = UUID.randomUUID();
+        this.uid = null;
         this.name = name;
         this.parameters = parameters;
         if (this.parameters.stream().anyMatch(param -> param instanceof TabsGroupParameterDefinition)) {
@@ -58,6 +59,9 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
     }
 
     public UUID getUid() {
+        if (uid == null) {
+            uid = UUID.randomUUID();
+        }
         return uid;
     }
 
