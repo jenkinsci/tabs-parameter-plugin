@@ -10,13 +10,14 @@ Example of build configuration :
 ![](docs/config.png)
 
 Example of "build with parameters" view:
+
 First tab:
+
 ![](docs/run-tab1.png)
 
 Second tab:
-![](docs/run-tab2.png)
 
-Heavily inspired by uno choice plugin.
+![](docs/run-tab2.png)
 
 ## Getting started
 
@@ -51,6 +52,8 @@ params
 At first, I tough I needed to reimplement the way the parameters where rendered, which lead me to Jenkins core
 territory, something that I don't wanted to try.
 Now I think my implementation is not _that_ hacky.
+
+Inspired by uno choice plugin.
 
 ## Issues
 
