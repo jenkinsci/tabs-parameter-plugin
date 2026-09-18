@@ -6,14 +6,11 @@ import hudson.ExtensionList;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.ParameterDefinition;
-import hudson.util.FormValidation;
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.verb.POST;
 
 /**
  * Describe a tab and parameters contained inside
@@ -77,14 +74,6 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
         @Override
         public String getDisplayName() {
             return Messages.TabParametersDefinition_DescriptorImpl_DisplayName();
-        }
-
-        // lgtm[jenkins/no-permission-check]
-        @POST
-        public FormValidation doCheckName(@QueryParameter String name) {
-            if (name.isEmpty())
-                return FormValidation.error(Messages.TabParametersDefinition_DescriptorImpl_NameEmpty());
-            return FormValidation.ok();
         }
 
         public List<ParameterDefinition.ParameterDescriptor> getParametersDescriptors() {
