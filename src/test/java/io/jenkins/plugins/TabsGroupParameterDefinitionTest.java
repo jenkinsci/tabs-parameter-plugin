@@ -1,9 +1,9 @@
 package io.jenkins.plugins;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import hudson.model.*;
+import java.lang.reflect.Proxy;
 import java.util.*;
 import jenkins.plugins.parameter_separator.ParameterSeparatorValue;
 import org.htmlunit.html.HtmlAnchor;
@@ -15,6 +15,7 @@ import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
+import org.kohsuke.stapler.StaplerRequest2;
 
 @WithJenkins
 class TabsGroupParameterDefinitionTest {
@@ -83,14 +84,39 @@ class TabsGroupParameterDefinitionTest {
     }
 
     @Test
-    void createValueFromStringIsRejected() {
-        var tabsGroupParameterDefinition =
-                generateTabConfig().stream().findFirst().get();
-        UnsupportedOperationException exception = assertThrows(
-                UnsupportedOperationException.class, () -> tabsGroupParameterDefinition.createValue("raw"));
-        assertEquals(
-                "String-based parameter parsing is not supported for 'tabsParam'. Use form submission instead.",
-                exception.getMessage());
+    void createValueFromRequestReadsRequestParameters(JenkinsRule jenkins) {
+        var definition = generateTabConfig().get(0);
+        var req = requestWithParameters(Map.of("tabsParam", "1", "toto", "custom"));
+
+        var value = definition.createValue(req);
+
+        assertEquals("tabsParam", value.getName());
+        assertEquals(2, value.getTabsValues().size());
+        // "1" selects the second tab, tab2
+        assertEquals("tab2", value.getSelectedTab().getName());
+        // the selected tab has no value in the request, so it keeps its default
+        assertEquals(Map.of("my-bool", true), value.getValue().get(TabsGroupParameterValue.SELECTED_TAB_PARAMS_KEY));
+        // the other tab uses the value from the request
+        var firstTabParameters = value.getTabsValues().get(0).getParameters();
+        assertEquals("custom", firstTabParameters.get(0).getValue());
+    }
+
+    private StaplerRequest2 requestWithParameters(Map<String, String> parameters) {
+        return (StaplerRequest2) Proxy.newProxyInstance(
+                getClass().getClassLoader(), new Class<?>[] {StaplerRequest2.class}, (proxy, method, args) -> {
+                    switch (method.getName()) {
+                        case "getParameter" -> {
+                            return parameters.get((String) args[0]);
+                        }
+                        case "getParameterValues" -> {
+                            var value = parameters.get((String) args[0]);
+                            return value == null ? null : new String[] {value};
+                        }
+                        default -> {
+                            return null;
+                        }
+                    }
+                });
     }
 
     @Test

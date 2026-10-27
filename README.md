@@ -39,12 +39,27 @@ params
         └── paramName2
 ```
 
+## Triggering a build from the API
+
+The tab group parameter is selected with its name and the zero-based index of the tab.
+The parameters inside the tabs are sent with their own names. Missing ones use their default value.
+
+```shell
+curl -X POST "https://jenkins.example.com/job/my-job/buildWithParameters" \
+  --user "user:api-token" \
+  --data-urlencode "tabGroupName=1" \
+  --data-urlencode "paramName1=value"
+```
+
+Here `tabGroupName=1` selects the second tab. The first tab is selected when it is omitted.
+An index out of range makes the request fail.
+
 ## Limitations:
 
 * Recursion of tabs groups is not supported (a tab group cannot contain another tab group)
 * Not tested compatibility with rebuild plugin
 * Only tested with base Jenkins Parameters
-* Cannot do CLI/POST requests (TabsGroupParameterDefinition#createValue(String) is not implemented)
+* When triggering a build from the API, the tab is selected by index, so reordering tabs changes which tab is selected
 * Only selected tab parameters are sent to the build
 
 ## Technical Infos

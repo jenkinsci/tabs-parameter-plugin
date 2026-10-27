@@ -4,7 +4,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.ParameterDefinition;
 import hudson.model.ParameterValue;
-import hudson.model.SimpleParameterDefinition;
 import java.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -19,7 +18,7 @@ import org.kohsuke.stapler.StaplerRequest2;
  * <p>
  * The method {@link TabsGroupParameterDefinition#createValue(StaplerRequest2, JSONObject)} make the work of generating values of parameters inside the tabs
  */
-public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
+public class TabsGroupParameterDefinition extends ParameterDefinition {
 
     private final List<TabParametersDefinition> tabs;
 
@@ -83,9 +82,40 @@ public class TabsGroupParameterDefinition extends SimpleParameterDefinition {
     }
 
     @Override
-    public TabsGroupParameterValue createValue(String value) {
-        throw new UnsupportedOperationException("String-based parameter parsing is not supported for '" + getName()
-                + "'. Use form submission instead.");
+    public TabsGroupParameterValue createValue(StaplerRequest2 req) {
+        Objects.requireNonNull(req, "request must not be null");
+
+        var selectedIndex = parseSelectedTabIndex(req.getParameter(getName()));
+        var tabsValues = new ArrayList<TabParametersValue>();
+        for (TabParametersDefinition tab : tabs) {
+            var parametersValues = new ArrayList<ParameterValue>();
+            for (ParameterDefinition parameter : tab.getParameters()) {
+                var value = parameter.createValue(req);
+                if (value != null) {
+                    parametersValues.add(value);
+                }
+            }
+            tabsValues.add(new TabParametersValue(tab.getUid(), tab.getName(), parametersValues));
+        }
+        return new TabsGroupParameterValue(
+                getName(), tabsValues, tabsValues.get(selectedIndex).getUid());
+    }
+
+    /** Zero-based index of the selected tab, the first tab when absent. */
+    private int parseSelectedTabIndex(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return 0;
+        }
+        try {
+            int index = Integer.parseInt(raw.trim());
+            if (index >= 0 && index < tabs.size()) {
+                return index;
+            }
+        } catch (NumberFormatException ignored) {
+            // reported below
+        }
+        throw new IllegalArgumentException(
+                "Invalid tab index '" + raw + "' for '" + getName() + "', expected 0 to " + (tabs.size() - 1));
     }
 
     public List<TabParametersDefinition> getTabs() {
