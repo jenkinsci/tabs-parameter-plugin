@@ -54,6 +54,24 @@ curl -X POST "https://jenkins.example.com/job/my-job/buildWithParameters" \
 Here `tabGroupName=1` selects the second tab. The first tab is selected when it is omitted.
 An index out of range makes the request fail.
 
+## Triggering a build from a pipeline
+
+The `build` step can pass a `TabsGroupParameterValue`. Tabs are given in the same order as in the job definition,
+each with its `name` and its parameter values. `selectedTabIndex` is the zero-based index of the selected tab, it is required. Parameters that are not given have no value, they do not use their default.
+
+```groovy
+build job: 'my-job', parameters: [
+    [$class: 'TabsGroupParameterValue', name: 'tabGroupName', selectedTabIndex: 1, tabsValues: [
+        [name: 'tab1', parameters: []],
+        [name: 'tab2', parameters: [
+            [$class: 'BooleanParameterValue', name: 'paramName2', value: true]
+        ]]
+    ]]
+]
+```
+
+Here the second tab, `tab2`, is selected.
+
 ## Limitations:
 
 * Recursion of tabs groups is not supported (a tab group cannot contain another tab group)

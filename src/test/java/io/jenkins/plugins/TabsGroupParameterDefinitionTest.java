@@ -84,6 +84,49 @@ class TabsGroupParameterDefinitionTest {
     }
 
     @Test
+    void tabUidsAreSetWhenLoadedFromConfig(JenkinsRule jenkins) throws Exception {
+        FreeStyleProject p = jenkins.createFreeStyleProject();
+        p.addProperty(new ParametersDefinitionProperty(generateTabConfig().get(0)));
+        p.save();
+        jenkins.getInstance().reload();
+
+        var reloaded = (TabsGroupParameterDefinition) jenkins.getInstance()
+                .getItemByFullName(p.getFullName(), FreeStyleProject.class)
+                .getProperty(ParametersDefinitionProperty.class)
+                .getParameterDefinition("tabsParam");
+        assertEquals(
+                TabsGroupParameterDefinition.tabUid("tabsParam", 1),
+                reloaded.getTabs().get(1).getUid());
+    }
+
+    @Test
+    void buildStepAcceptsTabsDeclaration(JenkinsRule jenkins) throws Exception {
+        WorkflowJob downstream = jenkins.createProject(WorkflowJob.class, "downstream");
+        downstream.addProperty(
+                new ParametersDefinitionProperty(generateTabConfig().get(0)));
+        downstream.setDefinition(new CpsFlowDefinition(
+                "echo \"my-bool=${params.tabsParam.selectedParams.'my-bool'} tab=${params.tabsParam.selectedTab}\"",
+                true));
+
+        WorkflowJob upstream = jenkins.createProject(WorkflowJob.class, "upstream");
+        upstream.setDefinition(new CpsFlowDefinition("""
+                build job: 'downstream', wait: true, parameters: [
+                    [$class: 'TabsGroupParameterValue', name: 'tabsParam', selectedTabIndex: 1, tabsValues: [
+                        [name: "tab'1", parameters: [
+                            [$class: 'StringParameterValue', name: 'toto', value: 'remote']
+                        ]],
+                        [name: 'tab2', parameters: [
+                            [$class: 'BooleanParameterValue', name: 'my-bool', value: false]
+                        ]]
+                    ]]
+                ]
+                """, true));
+
+        jenkins.assertBuildStatusSuccess(upstream.scheduleBuild2(0));
+        jenkins.assertLogContains("my-bool=false tab=tab2", downstream.getLastBuild());
+    }
+
+    @Test
     void createValueFromRequestReadsRequestParameters(JenkinsRule jenkins) {
         var definition = generateTabConfig().get(0);
         var req = requestWithParameters(Map.of("tabsParam", "1", "toto", "custom"));
