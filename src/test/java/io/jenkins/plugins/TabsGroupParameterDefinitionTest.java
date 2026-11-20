@@ -1,6 +1,7 @@
 package io.jenkins.plugins;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import hudson.model.*;
 import java.lang.reflect.Proxy;
@@ -81,6 +82,24 @@ class TabsGroupParameterDefinitionTest {
         jenkins.assertLogContains("Env toto equals : tata", completedBuild);
         jenkins.assertLogContains("Env nullable equals : ", completedBuild);
         jenkins.assertLogContains("Env Selected tab : tab'1", completedBuild);
+    }
+
+    @Test
+    void groupValueRejectsOutOfRangeSelectedTabIndex() {
+        for (int index : new int[] {-1, 1}) {
+            var tabs = List.of(new TabParametersValue("tab", List.of()));
+            assertThrows(IllegalArgumentException.class, () -> new TabsGroupParameterValue("tabsParam", tabs, index));
+        }
+    }
+
+    @Test
+    void groupValueKeepsExistingTabUid() {
+        var uid = UUID.randomUUID();
+        var tab = new TabParametersValue(uid, "tab", List.of());
+
+        var value = new TabsGroupParameterValue("tabsParam", List.of(tab), 0);
+
+        assertEquals(uid, value.getSelectedTabUid());
     }
 
     @Test
