@@ -22,6 +22,9 @@ import org.kohsuke.stapler.StaplerRequest2;
  */
 public class TabsGroupParameterDefinition extends ParameterDefinition {
 
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final List<TabParametersDefinition> tabs;
 
     /** Tab displayed first, set on copies made to prefill a previous value, e.g. by the rebuild plugin. */

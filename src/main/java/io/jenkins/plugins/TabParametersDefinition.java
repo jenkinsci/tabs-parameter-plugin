@@ -6,6 +6,7 @@ import hudson.ExtensionList;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.ParameterDefinition;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +17,9 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * Describe a tab and parameters contained inside
  */
 public class TabParametersDefinition implements Describable<TabParametersDefinition>, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * UUID for tab lookup, set by the {@link TabsGroupParameterDefinition} owning the tab
