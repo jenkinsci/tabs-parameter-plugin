@@ -6,7 +6,7 @@
     <f:entry title="${h.escape(it.name)}" description="${it.formattedDescription}">
         <div name="parameter" class="tgp-container">
             <input type="hidden" name="name" value="${it.name}"/>
-            <j:set var="firstSelectedUid" value=""/>
+            <j:set var="firstSelectedUid" value="${it.initialTabUid}"/>
 
             <!-- Tab links -->
             <div id="projectstatus-tabBar">
@@ -14,9 +14,8 @@
                     <div class="tabBar">
                         <j:forEach var="tab" items="${it.tabs}" indexVar="index">
                             <j:set var="active" value=""/>
-                            <j:if test="${index==0}">
+                            <j:if test="${tab.uid==firstSelectedUid}">
                                 <j:set var="active" value="active"/>
-                                <j:set var="firstSelectedUid" value="${tab.uid}"/>
                             </j:if>
                             <div class="tab ${active}" data-tab-uid="${tab.uid}" data-selected-tab-id="selected-tab-input-${h.escape(it.name)}">
                                 <a name="${tab.uid}" data-tab-uid="${tab.uid}" data-selected-tab-id="selected-tab-input-${h.escape(it.name)}" class="tgp-tablinks">${tab.name}</a>
@@ -29,7 +28,7 @@
 
             <j:forEach var="tab" items="${it.tabs}" indexVar="index">
                 <j:set var="hiddenClass" value=""/>
-                <j:if test="${index!=0}">
+                <j:if test="${tab.uid!=firstSelectedUid}">
                     <j:set var="hiddenClass" value="jenkins-hidden"/>
                 </j:if>
                 <!-- Tab content -->
