@@ -215,6 +215,38 @@ class TabsGroupParameterDefinitionTest {
         assertEquals(secondTabUid, selectedTabInput.getValue());
     }
 
+    @Test
+    void rebuildPagePrefillsPreviousValues(JenkinsRule jenkins) throws Exception {
+        var definition = generateTabConfig().get(0);
+        FreeStyleProject p = jenkins.createFreeStyleProject();
+        p.addProperty(new ParametersDefinitionProperty(definition));
+
+        var secondTab = definition.getTabs().get(1);
+        var tabs = List.of(
+                new TabParametersValue(
+                        definition.getTabs().get(0).getUid(),
+                        "tab'1",
+                        List.of(new StringParameterValue("toto", "previous"))),
+                new TabParametersValue(
+                        secondTab.getUid(), "tab2", List.of(new BooleanParameterValue("my-bool", false, "d"))));
+        var value = new TabsGroupParameterValue("tabsParam", new ArrayList<>(tabs), secondTab.getUid());
+        FreeStyleBuild build = jenkins.assertBuildStatusSuccess(p.scheduleBuild2(0, new ParametersAction(value)));
+
+        JenkinsRule.WebClient webClient = jenkins.createWebClient().withThrowExceptionOnFailingStatusCode(false);
+        HtmlPage page = webClient.getPage(build, "rebuild/parameterized");
+
+        HtmlInput selectedTabInput = (HtmlInput) page.getElementById("selected-tab-input-tabsParam");
+        assertEquals(secondTab.getUid().toString(), selectedTabInput.getValue());
+        assertEquals(
+                "previous",
+                page.getElementsByName("value").stream()
+                        .map(e -> ((HtmlInput) e))
+                        .filter(e -> "text".equals(e.getTypeAttribute()))
+                        .findFirst()
+                        .orElseThrow()
+                        .getValue());
+    }
+
     private List<TabsGroupParameterDefinition> generateTabConfig() {
         var tabs = new ArrayList<TabParametersDefinition>();
 

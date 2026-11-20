@@ -24,6 +24,9 @@ public class TabsGroupParameterDefinition extends ParameterDefinition {
 
     private final List<TabParametersDefinition> tabs;
 
+    /** Tab displayed first, set on copies made to prefill a previous value, e.g. by the rebuild plugin. */
+    private transient UUID initialTabUid;
+
     @DataBoundConstructor
     public TabsGroupParameterDefinition(String name, List<TabParametersDefinition> tabs) {
         super(name);
@@ -140,6 +143,55 @@ public class TabsGroupParameterDefinition extends ParameterDefinition {
         }
         throw new IllegalArgumentException(
                 "Invalid tab index '" + raw + "' for '" + getName() + "', expected 0 to " + (tabs.size() - 1));
+    }
+
+    /**
+     * Copy of this definition whose parameters default to the ones of the given previous value.
+     */
+    @Override
+    public ParameterDefinition copyWithDefaultValue(ParameterValue defaultValue) {
+        if (!(defaultValue instanceof TabsGroupParameterValue groupValue)) {
+            return this;
+        }
+        var copiedTabs = new ArrayList<TabParametersDefinition>();
+        for (TabParametersDefinition tab : tabs) {
+            var previousParameters = previousParametersOf(groupValue, tab);
+            var copiedParameters = new ArrayList<ParameterDefinition>();
+            for (ParameterDefinition parameter : tab.getParameters()) {
+                var previous = previousParameters.stream()
+                        .filter(value -> parameter.getName().equals(value.getName()))
+                        .findFirst();
+                if (previous.isPresent()) {
+                    copiedParameters.add(parameter.copyWithDefaultValue(previous.get()));
+                } else {
+                    copiedParameters.add(parameter);
+                }
+            }
+            copiedTabs.add(new TabParametersDefinition(tab.getName(), copiedParameters));
+        }
+        var copy = new TabsGroupParameterDefinition(getName(), copiedTabs);
+        copy.setDescription(getDescription());
+        copy.initialTabUid = groupValue.getSelectedTabUid();
+        return copy;
+    }
+
+    private List<ParameterValue> previousParametersOf(TabsGroupParameterValue groupValue, TabParametersDefinition tab) {
+        for (TabParametersValue value : groupValue.getTabsValues()) {
+            if (Objects.equals(value.getUid(), tab.getUid())) {
+                return value.getParameters();
+            }
+        }
+        return List.of();
+    }
+
+    public UUID getInitialTabUid() {
+        if (initialTabUid != null) {
+            return initialTabUid;
+        }
+        if (tabs.isEmpty()) {
+            return null;
+        }
+        return tabs.get(0).getUid();
     }
 
     public List<TabParametersDefinition> getTabs() {
