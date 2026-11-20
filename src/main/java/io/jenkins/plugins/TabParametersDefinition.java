@@ -18,7 +18,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 public class TabParametersDefinition implements Describable<TabParametersDefinition>, Serializable {
 
     /**
-     * UUID for tab lookup
+     * UUID for tab lookup, set by the {@link TabsGroupParameterDefinition} owning the tab
      * Transient because we don't want it in the config.xml, to keep history of "config history plugin" clean
      */
     private transient UUID uid;
@@ -56,10 +56,11 @@ public class TabParametersDefinition implements Describable<TabParametersDefinit
     }
 
     public UUID getUid() {
-        if (uid == null) {
-            uid = UUID.randomUUID();
-        }
         return uid;
+    }
+
+    void setUid(UUID uid) {
+        this.uid = uid;
     }
 
     @Override

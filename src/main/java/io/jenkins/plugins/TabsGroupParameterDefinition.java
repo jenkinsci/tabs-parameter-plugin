@@ -4,6 +4,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.ParameterDefinition;
 import hudson.model.ParameterValue;
+import java.io.Serial;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -26,6 +28,28 @@ public class TabsGroupParameterDefinition extends ParameterDefinition {
     public TabsGroupParameterDefinition(String name, List<TabParametersDefinition> tabs) {
         super(name);
         this.tabs = Objects.requireNonNull(tabs, "tabs must not be null");
+        initTabUids();
+    }
+
+    /** The uids are transient, so they must be set again when the definition is loaded from the config. */
+    @Serial
+    protected Object readResolve() {
+        initTabUids();
+        return this;
+    }
+
+    private void initTabUids() {
+        for (int i = 0; i < tabs.size(); i++) {
+            tabs.get(i).setUid(tabUid(getName(), i));
+        }
+    }
+
+    /**
+     * Stable uid of a tab, so that values created without the definition, e.g. by the pipeline build step,
+     * match the tabs displayed by the definition.
+     */
+    public static UUID tabUid(String groupName, int index) {
+        return UUID.nameUUIDFromBytes((groupName + "/tab-" + index).getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
