@@ -1,6 +1,7 @@
 package io.jenkins.plugins;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import hudson.model.*;
@@ -161,6 +162,92 @@ class TabsGroupParameterDefinitionTest {
         // the other tab uses the value from the request
         var firstTabParameters = value.getTabsValues().get(0).getParameters();
         assertEquals("custom", firstTabParameters.get(0).getValue());
+    }
+
+    @Test
+    void createValueFromRequestRejectsInvalidTabIndex(JenkinsRule jenkins) {
+        var definition = generateTabConfig().get(0);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> definition.createValue(requestWithParameters(Map.of("tabsParam", "5"))));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> definition.createValue(requestWithParameters(Map.of("tabsParam", "abc"))));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> definition.createValue(requestWithParameters(Map.of("tabsParam", "-1"))));
+        assertEquals(
+                "tab'1",
+                definition
+                        .createValue(requestWithParameters(Map.of("toto", "x")))
+                        .getSelectedTab()
+                        .getName());
+        assertEquals(
+                "tab'1",
+                definition
+                        .createValue(requestWithParameters(Map.of("tabsParam", " ")))
+                        .getSelectedTab()
+                        .getName());
+    }
+
+    @Test
+    void invalidTabsAreRejected(JenkinsRule jenkins) {
+        var nested = new TabsGroupParameterDefinition("inner", List.of());
+        assertThrows(IllegalArgumentException.class, () -> new TabParametersDefinition("tab", List.of(nested)));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new TabParametersDefinition(
+                        "tab", List.of(new StringParameterDefinition(TabsGroupParameterValue.SELECTED_TAB_KEY, ""))));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new TabsGroupParameterValue(
+                        "tabsParam", new ArrayList<>(List.of(new TabParametersValue("tab", List.of()))), 1));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new TabsGroupParameterValue(
+                        "tabsParam", new ArrayList<>(List.of(new TabParametersValue("tab", List.of()))), -1));
+    }
+
+    @Test
+    void valueKeepsExistingTabUids(JenkinsRule jenkins) {
+        var uid = UUID.randomUUID();
+        var value = new TabsGroupParameterValue(
+                "tabsParam", new ArrayList<>(List.of(new TabParametersValue(uid, "tab", List.of()))), 0);
+
+        assertEquals(uid, value.getSelectedTabUid());
+    }
+
+    @Test
+    void copyWithDefaultValueKeepsDefaultsWithoutPreviousValue(JenkinsRule jenkins) {
+        var definition = generateTabConfig().get(0);
+        var previousTab = new TabParametersValue(
+                definition.getTabs().get(0).getUid(), "tab'1", List.of(new StringParameterValue("other", "x")));
+        var unknownTab = new TabParametersValue(UUID.randomUUID(), "gone", List.of());
+        var previous = new TabsGroupParameterValue(
+                "tabsParam", new ArrayList<>(List.of(previousTab, unknownTab)), previousTab.getUid());
+
+        var copy = (TabsGroupParameterDefinition) definition.copyWithDefaultValue(previous);
+
+        assertEquals(2, copy.getTabs().size());
+        assertEquals(
+                "def",
+                copy.getTabs()
+                        .get(0)
+                        .getParameters()
+                        .get(0)
+                        .getDefaultParameterValue()
+                        .getValue());
+        assertEquals(previousTab.getUid(), copy.getInitialTabUid());
+        assertNull(new TabsGroupParameterDefinition("empty", List.of()).getInitialTabUid());
+    }
+
+    @Test
+    void copyWithDefaultValueIgnoresOtherValueTypes(JenkinsRule jenkins) {
+        var definition = generateTabConfig().get(0);
+
+        assertEquals(definition, definition.copyWithDefaultValue(new StringParameterValue("tabsParam", "x")));
+        assertEquals(definition.getTabs().get(0).getUid(), definition.getInitialTabUid());
     }
 
     private StaplerRequest2 requestWithParameters(Map<String, String> parameters) {
