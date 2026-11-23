@@ -75,7 +75,6 @@ Here the second tab, `tab2`, is selected.
 ## Limitations:
 
 * Recursion of tabs groups is not supported (a tab group cannot contain another tab group)
-* Not tested compatibility with rebuild plugin
 * Only tested with base Jenkins Parameters
 * When triggering a build from the API, the tab is selected by index, so reordering tabs changes which tab is selected
 * Only selected tab parameters are sent to the build
