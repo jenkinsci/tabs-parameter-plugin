@@ -22,7 +22,23 @@ public class TabsGroupParameterValue extends ParameterValue {
 
     private final UUID selectedTabUid;
 
+    /**
+     * Used when calling $class in pipeline build step
+     */
     @DataBoundConstructor
+    public TabsGroupParameterValue(String name, List<TabParametersValue> tabsValues, int selectedTabIndex) {
+        super(name);
+        this.tabsValues = Objects.requireNonNull(tabsValues, "tabsValues must not be null");
+        for (int i = 0; i < tabsValues.size(); i++) {
+            tabsValues.get(i).initUidIfMissing(TabsGroupParameterDefinition.tabUid(name, i));
+        }
+        if (selectedTabIndex < 0 || selectedTabIndex >= tabsValues.size()) {
+            throw new IllegalArgumentException("Invalid selectedTabIndex " + selectedTabIndex + " for '" + name
+                    + "', expected 0 to " + (tabsValues.size() - 1));
+        }
+        this.selectedTabUid = tabsValues.get(selectedTabIndex).getUid();
+    }
+
     public TabsGroupParameterValue(String name, List<TabParametersValue> tabsValues, UUID selectedTabUid) {
         super(name);
         this.tabsValues = Objects.requireNonNull(tabsValues, "tabsValues must not be null");
